@@ -17,8 +17,6 @@ class Impact(BaseModel):
 class AlertItem(BaseModel):
     id: str
     name: str
-    code: str
-    external_code: str = Field(..., alias="externalCode")
     impacts: List[Impact]
     transport_mode: int = Field(..., alias="transportMode")
 

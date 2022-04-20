@@ -1,10 +1,10 @@
 import os
 
-import nextcord
+import disnake
 
 from dotenv import load_dotenv
 from loguru import logger
-from nextcord.ext import commands
+from disnake.ext import commands
 
 from tbmbot import TBMBot
 from tbmbot.cogs import __extensions__
@@ -14,9 +14,10 @@ def main():
     load_dotenv(".env")
     bot = TBMBot(
         command_prefix=" ",
-        activity=nextcord.Activity(
+        test_guilds=[492677155180904448],
+        activity=disnake.Activity(
             name="bus vroom vroom",
-            type=nextcord.ActivityType.watching,
+            type=disnake.ActivityType.watching,
         ),
     )
 

@@ -1,10 +1,10 @@
 import itertools
 
-import nextcord
+import disnake
 
 from typing import List
 
-from nextcord import Member
+from disnake import Member
 
 from tbmbot.models import SearchItem
 from tbmbot.utils import requester
@@ -22,12 +22,12 @@ class SearchInteraction:
     }
 
 
-class _SearchDropdown(nextcord.ui.Select):
+class _SearchDropdown(disnake.ui.Select):
     _banned: list = ["Autocar", "Ferry"]
 
     def __init__(self, opts: List[SearchItem]):
         o: list = [
-            nextcord.SelectOption(
+            disnake.SelectOption(
                 label=SearchInteraction.CANCEL_TEXT,
                 description="Annuler la recherche actuelle.",
                 emoji=SearchInteraction.CANCEL_EMOJI,
@@ -40,7 +40,7 @@ class _SearchDropdown(nextcord.ui.Select):
             desc: str = f"{e.city} ({e.insee})" if e.city and e.insee else ""
             value: str = e.url.replace(requester.BASE_PATH, "")
             o.append(
-                nextcord.SelectOption(
+                disnake.SelectOption(
                     label=e.name,
                     description=desc,
                     emoji=SearchInteraction.mode_emoji.get(e.mode, "⁉"),
@@ -53,7 +53,7 @@ class _SearchDropdown(nextcord.ui.Select):
         )
 
 
-class SearchView(nextcord.ui.View):
+class SearchView(disnake.ui.View):
     def __init__(self, author: Member, opts: List[SearchItem]):
         super().__init__(timeout=15.0)
         self._timeout = False
@@ -62,12 +62,12 @@ class SearchView(nextcord.ui.View):
         self.add_item(self._drop)
         self._message = None
 
-    async def interaction_check(self, inter: nextcord.Interaction) -> bool:
+    async def interaction_check(self, inter: disnake.Interaction) -> bool:
         if inter.user != self._author:
             return False
 
         self._drop.disabled = True
-        await inter.edit(view=self)
+        await inter.response.edit_message(view=self)
         self.stop()
 
     async def on_timeout(self) -> None:

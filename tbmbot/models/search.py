@@ -12,6 +12,10 @@ class SearchItem(BaseModel):
     city: Optional[str] = None
     insee: Optional[str] = None
 
+    @property
+    def is_stop(self) -> bool:
+        return self.type == "stop_area"
+
 
 class Search(BaseModel):
     __root__: List[SearchItem]

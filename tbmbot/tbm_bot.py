@@ -1,7 +1,7 @@
 import traceback
 
 from loguru import logger
-from nextcord.ext import commands
+from disnake.ext import commands
 
 
 class TBMBot(commands.Bot):

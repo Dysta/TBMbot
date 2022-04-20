@@ -7,6 +7,7 @@ _EMPTY_RESPONSE: str = "[]"
 BASE_PATH: str = "https://ws.infotbm.com/ws/1.0"
 _DEV_BASE_PATH: str = "./data"
 
+_STOP_INFO_ENDPOINT: str = f"{BASE_PATH}/network/stoparea-informations/"
 _LINE_INFO_ENDPOINT: str = f"{BASE_PATH}/network/line-informations/"
 _ALERT_INFO_ENDPOINT: str = f"{BASE_PATH}/alerts/by-transport/"
 _SEARCH_ENDPOINT: str = f"{BASE_PATH}/get-schedule/"
@@ -45,6 +46,10 @@ async def _make_request(__base_path: str, __resource: str) -> (int, str):
 
 async def get_line_info(line_id: str) -> (int, str):
     return await _make_request(_LINE_INFO_ENDPOINT, line_id)
+
+
+async def get_stop_info(stop_id: str) -> (int, str):
+    return await _make_request(_STOP_INFO_ENDPOINT, stop_id)
 
 
 async def get_line_alerts(line_id: str) -> (int, str):

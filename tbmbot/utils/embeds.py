@@ -2,7 +2,7 @@ from datetime import datetime
 from urllib.parse import quote
 
 from markdownify import markdownify
-from nextcord import Embed, Colour
+from disnake import Embed, Colour
 
 from tbmbot.models import LineInformation, Alerts
 
