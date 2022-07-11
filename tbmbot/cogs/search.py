@@ -65,7 +65,7 @@ class Search(commands.Cog):
         except Exception as e:
             logger.error(e)
 
-        tpe, id = search_result.__root__[0].type, search_result.__root__[0].id
+        tpe, id = search_result.get_type_and_id_for(recherche)
 
         logger.debug(id)
         logger.debug(tpe)

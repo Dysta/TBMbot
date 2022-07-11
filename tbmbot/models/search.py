@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from pydantic import BaseModel
 
@@ -19,3 +19,9 @@ class SearchItem(BaseModel):
 
 class Search(BaseModel):
     __root__: List[SearchItem]
+
+    def get_type_and_id_for(self, query: str) -> Optional[Tuple[str, str]]:
+        for e in self.__root__:
+            if e.name == query:
+                return e.type, e.id
+        return None
