@@ -101,7 +101,7 @@ class Search(commands.Cog):
         logger.debug(content)
         try:
             search_result: Search_m = Search_m.parse_raw(content)
-            return [s.name for s in search_result.__root__]
+            return [s.name for s in search_result.__root__][:20]
         except Exception as e:
             logger.error(e)
             return []
