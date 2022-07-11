@@ -98,7 +98,7 @@ class Information(commands.Cog):
             {
                 "A": "line:TBT:59",
                 "B": "line:TBT:60",
-                "C": "line:TBT:64",
+                "C": "line:TBT:61",
                 "D": "line:TBT:62",
             },
         ),
