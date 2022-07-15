@@ -4,7 +4,7 @@ from loguru import logger
 from disnake.ext import commands
 
 
-class TBMBot(commands.Bot):
+class TBMBot(commands.InteractionBot):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

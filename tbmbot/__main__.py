@@ -13,7 +13,6 @@ from tbmbot.cogs import __extensions__
 def main():
     load_dotenv(".env")
     bot = TBMBot(
-        command_prefix=" ",
         test_guilds=[492677155180904448],
         activity=disnake.Activity(
             name="bus vroom vroom",
