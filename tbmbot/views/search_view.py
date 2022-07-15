@@ -73,7 +73,7 @@ class SearchView(disnake.ui.View):
         await self._message.edit(view=self)
 
     @property
-    def result(self) -> (str, str):
+    def result(self) -> Tuple[str, str]:
         if self._timeout:
             return "", SearchInteraction.CANCEL_TEXT
         return tuple(self._drop.values[0].split("|"))
