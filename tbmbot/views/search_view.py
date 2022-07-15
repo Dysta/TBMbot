@@ -1,11 +1,8 @@
 import itertools
+from typing import List, Tuple
 
 import disnake
-
-from typing import List
-
 from disnake import Member
-
 from tbmbot.models import SearchItem
 from tbmbot.utils import requester
 

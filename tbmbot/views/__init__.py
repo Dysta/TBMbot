@@ -1,1 +1,1 @@
-from .search_view import SearchView, SearchInteraction
+from .search_view import SearchInteraction, SearchView

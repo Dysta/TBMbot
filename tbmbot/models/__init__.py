@@ -1,4 +1,5 @@
-from .line_informations import StopPoint, Route, Terminus, LineMap, LineInformation
-from .alert import Alerts, AlertItem, Alert, Impact
+from .alert import Alert, AlertItem, Alerts, Impact
+from .line_informations import LineInformation, LineMap, Route, StopPoint, Terminus
 from .search import Search, SearchItem
-from .stoparea_information import StopArea, StopPoint, Route, Line
+from .stop_schedule import Schedule
+from .stoparea_information import Line, Route, StopArea, StopPoint

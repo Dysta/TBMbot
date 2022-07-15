@@ -1,11 +1,10 @@
 import itertools
+from typing import Optional
 
 import disnake
-
-from loguru import logger
 from disnake.ext import commands
-
-from tbmbot.models import LineInformation, Alerts, Search, StopArea
+from loguru import logger
+from tbmbot.models import Alerts, LineInformation, Search, StopArea
 from tbmbot.utils import embeds, requester
 
 
@@ -14,7 +13,9 @@ class Information(commands.Cog):
         self._bot = bot
 
     @staticmethod
-    async def _line_callback(inter: disnake.Interaction, line_id: str):
+    async def _line_callback(
+        inter: disnake.Interaction, line_id: str, alertes: bool = False
+    ):
         embed_to_send: list = []
         logger.debug(f"Get info for line {line_id}")
 

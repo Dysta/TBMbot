@@ -1,7 +1,7 @@
 import traceback
 
-from loguru import logger
 from disnake.ext import commands
+from loguru import logger
 
 
 class TBMBot(commands.InteractionBot):

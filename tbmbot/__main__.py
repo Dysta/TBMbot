@@ -1,10 +1,9 @@
 import os
 
 import disnake
-
+from disnake.ext import commands
 from dotenv import load_dotenv
 from loguru import logger
-from disnake.ext import commands
 
 from tbmbot import TBMBot
 from tbmbot.cogs import __extensions__
