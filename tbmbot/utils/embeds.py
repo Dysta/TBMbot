@@ -56,3 +56,17 @@ def line_perturbation_embed(alerts_data: Alerts) -> Embed:
         )
 
     return e
+
+
+def line_schedule_embed(title: str, schedules: List[Schedule]) -> Embed:
+    e: Embed = Embed(title=title, description="", colour=0xDB3C30)
+
+    for schedule in schedules:
+        v = "\n".join([f"`{e.waittime_text}`" for e in schedule.__root__])
+        e.add_field(
+            name=f"{schedule.__root__[0].line_name} ➡️ {schedule.__root__[0].destination_name}",
+            value=v,
+            inline=False,
+        )
+
+    return e

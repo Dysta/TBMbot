@@ -1,21 +1,18 @@
 from typing import Tuple
 
 import aiohttp
-
 from loguru import logger
 
 _EMPTY_RESPONSE: str = "[]"
 
 BASE_PATH: str = "https://ws.infotbm.com/ws/1.0"
-_DEV_BASE_PATH: str = "./data"
 
 _STOP_INFO_ENDPOINT: str = f"{BASE_PATH}/network/stoparea-informations/"
 _LINE_INFO_ENDPOINT: str = f"{BASE_PATH}/network/line-informations/"
 _ALERT_INFO_ENDPOINT: str = f"{BASE_PATH}/alerts/by-transport/"
 _SEARCH_ENDPOINT: str = f"{BASE_PATH}/get-schedule/"
+_SCHEDULE_ENDPOINT: str = f"{BASE_PATH}/get-realtime-pass/"
 
-_DEV_LINE_INFO_ENDPOINT: str = f"{_DEV_BASE_PATH}/network/line-informations/"
-_DEV_ALERT_INFO_ENDPOINT: str = f"{_DEV_BASE_PATH}/alerts/by-transport/"
 
 async def _make_request(__base_path: str, __resource: str) -> Tuple[int, str]:
     _full_path: str = f"{__base_path}{__resource}"
@@ -55,6 +52,10 @@ async def get_stop_info(stop_id: str) -> Tuple[int, str]:
 
 async def get_line_alerts(line_id: str) -> Tuple[int, str]:
     return await _make_request(_ALERT_INFO_ENDPOINT, line_id)
+
+
+async def get_stop_schedule(stop_code: str, line_id: str) -> Tuple[int, str]:
+    return await _make_request(_SCHEDULE_ENDPOINT, f"{stop_code}/{line_id}")
 
 
 async def search_for(query: str) -> Tuple[int, str]:

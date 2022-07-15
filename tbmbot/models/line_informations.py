@@ -16,7 +16,7 @@ class Route(BaseModel):
     name: str
     start: str
     end: str
-    # stop_points: List[StopPoint] = Field(..., alias="stopPoints")
+    stop_points: List[StopPoint] = Field(..., alias="stopPoints")
     external_code: str = Field(..., alias="externalCode")
 
 
@@ -47,3 +47,14 @@ class LineInformation(BaseModel):
     line_maps: List[LineMap] = Field(..., alias="lineMaps")
     terminus: List[Terminus]
     line_schedules: List[LineSchedule] = Field(..., alias="lineSchedules")
+
+    def get_external_code_for_stop_point(
+        self, stop_point: str
+    ) -> Tuple[Optional[str], Optional[str]]:
+        ret = [None, None]
+        for i, r in enumerate(self.routes):
+            for s in r.stop_points:
+                if s.name.lower() == stop_point.lower():
+                    ret[i] = s.external_code
+
+        return tuple(ret)
