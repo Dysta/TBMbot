@@ -70,13 +70,13 @@ class Information(commands.Cog):
             description="",
             colour=disnake.Colour.darker_grey(),
         )
-        #  we short stop points by name
+        # ? we short stop points by name
         s_sp = sorted(data.stop_points, key=lambda x: x.name)
-        #  then we group it
+        # ? then we group it
         g_sp = itertools.groupby(s_sp, key=lambda x: x.name)
 
         for name, stops in g_sp:
-            #  we add all the routes together
+            # ? we add all the routes together
             rts = itertools.chain(*[s.routes for s in stops])
             s_rts = sorted(rts, key=lambda x: x.line.name)
             logger.debug(s_rts)
