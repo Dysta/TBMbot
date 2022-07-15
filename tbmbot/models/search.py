@@ -20,10 +20,13 @@ class SearchItem(BaseModel):
 class Search(BaseModel):
     __root__: List[SearchItem]
 
-    def get_item_for(self, query: str) -> Optional[SearchItem]:
+    def get_item_for(
+        self, query: str, city: Optional[str] = None
+    ) -> Optional[SearchItem]:
         for e in self.__root__:
             if e.name.lower() == query.lower():
-                return e
+                if city and e.city.lower() == city.lower():
+                    return e
         return None
 
     def get_type_and_id_for(self, query: str) -> Optional[Tuple[str, str]]:

@@ -3,8 +3,6 @@ from typing import Callable, List
 import disnake
 from disnake.ext import commands
 from loguru import logger
-from tbmbot.models import LineInformation
-from tbmbot.models import Schedule
 from tbmbot.models import Schedule as Schedule_m
 from tbmbot.models import Search, SearchItem, StopArea
 from tbmbot.utils import embeds, requester
@@ -25,7 +23,9 @@ class Schedule(commands.Cog):
         logger.debug(content)
         try:
             search_result: Search = Search.parse_raw(content)
-            return [s.name for s in search_result.__root__ if predicat(s)][:20]
+            return [
+                f"{s.name} — {s.city}" for s in search_result.__root__ if predicat(s)
+            ][:20]
         except Exception as e:
             logger.error(e)
             return []
@@ -42,6 +42,13 @@ class Schedule(commands.Cog):
 
         logger.debug(arret)
 
+        if "—" in arret:
+            arret, city = arret.split("—")
+            arret = arret.strip()
+            city = city.strip()
+            logger.debug(arret)
+            logger.debug(city)
+
         status, content = await requester.search_for(arret)
         logger.debug(status)
         logger.debug(content)
@@ -55,13 +62,16 @@ class Schedule(commands.Cog):
             logger.error(e)
             return
 
-        stop_item = search_result.get_item_for(arret)
+        stop_item = search_result.get_item_for(arret, city)
         if not stop_item:
-            await inter.send(f":x: | Rien trouvé pour {arret}.", delete_after=10.0)
+            await inter.send(
+                f":x: | Rien trouvé pour {arret} — {city}.", delete_after=10.0
+            )
             return
 
         stop_id = stop_item.id
         stop_name = stop_item.name
+        stop_city = stop_item.city
 
         logger.debug(stop_id)
         logger.debug(stop_name)
@@ -106,7 +116,7 @@ class Schedule(commands.Cog):
                     logger.error(l_name)
 
         e: disnake.Embed = embeds.line_schedule_embed(
-            f"Horaire pour {stop_name}", schedule_list
+            f"Horaire pour {stop_name} — {stop_city}", schedule_list
         )
         await inter.edit_original_message(embed=e)
 
