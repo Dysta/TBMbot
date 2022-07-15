@@ -31,15 +31,16 @@ class Information(commands.Cog):
 
         line_data: LineInformation = LineInformation.parse_raw(content)
         e: disnake.Embed = embeds.line_info_embed(line_data)
-        embed_to_send.append(e)
+        embed_to_send += e
 
-        status, content = await requester.get_line_alerts(line_id)
-        if status == 200:
-            alerts_data: Alerts = Alerts.parse_raw(content)
-            ae: disnake.Embed = embeds.line_perturbation_embed(alerts_data)
-            embed_to_send.append(ae)
-        else:
-            logger.info(f"No perturbation found for '{line_id}'")
+        if alertes:
+            status, content = await requester.get_line_alerts(line_id)
+            if status == 200:
+                alerts_data: Alerts = Alerts.parse_raw(content)
+                ae: disnake.Embed = embeds.line_perturbation_embed(alerts_data)
+                embed_to_send.append(ae)
+            else:
+                logger.info(f"No perturbation found for '{line_id}'")
 
         if inter.response.is_done():
             await inter.edit_original_message(embeds=embed_to_send)
@@ -103,6 +104,7 @@ class Information(commands.Cog):
                 "D": "line:TBT:62",
             },
         ),
+        alertes: Optional[bool] = False,
     ):
         """A random command
         Parameters
@@ -110,13 +112,14 @@ class Information(commands.Cog):
         inter: A random user
         ligne: Ligne de tram
         """
-        await self._line_callback(inter, ligne)
+        await self._line_callback(inter, ligne, alertes)
 
     @info.sub_command(description="Information sur les Lianes — Code couleur 🟦 🟧 🟩")
     async def bus(
         self,
         inter: disnake.CommandInteraction,
         ligne: commands.Range[1, 99],
+        alertes: Optional[bool] = False,
     ):
         """A random command
         Parameters
@@ -125,7 +128,7 @@ class Information(commands.Cog):
         ligne: Ligne de bus
         """
         line_id = f"line:TBC:{ligne:0>2}"
-        await self._line_callback(inter, line_id)
+        await self._line_callback(inter, line_id, alertes)
 
     @info.sub_command(description="Information sur les arrêts")
     async def arret(
