@@ -110,13 +110,17 @@ class Schedule(commands.Cog):
                         s.line_id = int(l_id)
                     schedule_list.append(schedule_data)
                 except Exception as e:
-                    logger.error(e)
-                    logger.error(s_id)
-                    logger.error(l_id)
-                    logger.error(l_name)
+                    logger.error(f"Error during parsing of schedules: {e}")
+                    logger.error(
+                        f"Data used: stop_id {s_id}, line_id {l_id}, line_name {l_name}"
+                    )
+
+        # ? we short by line_name
+        # ? we just need to take the first bc all the others in the root have the same name
+        schedule_list = sorted(schedule_list, key=lambda x: x.__root__[0].line_name)
 
         e: disnake.Embed = embeds.line_schedule_embed(
-            f"Horaire pour {stop_name} — {stop_city}", schedule_list
+            f"⌚ {stop_name} — {stop_city}", schedule_list
         )
         await inter.edit_original_message(embed=e)
 
