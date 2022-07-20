@@ -3,7 +3,7 @@ from typing import Tuple
 import aiohttp
 from loguru import logger
 
-_EMPTY_RESPONSE: str = "[]"
+EMPTY_RESPONSE: str = "[]"
 
 BASE_PATH: str = "https://ws.infotbm.com/ws/1.0"
 
@@ -28,7 +28,7 @@ async def _make_request(__base_path: str, __resource: str) -> Tuple[int, str]:
                 return status, ""
 
             content: str = await response.text()
-            if content == _EMPTY_RESPONSE:
+            if content == EMPTY_RESPONSE:
                 logger.warning(
                     f"Url '{_full_path}' returned a valid status code ({status}) but no content"
                 )
