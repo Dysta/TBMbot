@@ -1,3 +1,4 @@
+import json
 from typing import Tuple
 
 import aiohttp
@@ -54,8 +55,26 @@ async def get_line_alerts(line_id: str) -> Tuple[int, str]:
     return await _make_request(_ALERT_INFO_ENDPOINT, line_id)
 
 
-async def get_stop_schedule(stop_code: str, line_id: str) -> Tuple[int, str]:
-    return await _make_request(_SCHEDULE_ENDPOINT, f"{stop_code}/{line_id}")
+async def get_stop_schedule(
+    line_name: str, stop_code: str, line_id: str
+) -> Tuple[int, str]:
+    status, content = await _make_request(_SCHEDULE_ENDPOINT, f"{stop_code}/{line_id}")
+    if status != 200 or content == "":
+        return status, content
+
+    # ? we convert current json to dict to easily remove the unknown 'destination_key'
+    data: dict = json.loads(content)
+
+    # ? we remove the 'destination' key
+    data = data.pop("destinations")
+    if len(data):
+        # ? since the 'destination_id' key isn't know, we just extract the content
+        data = list(data.values())[0]
+        # ? and inject the line_name in the result
+        for s in data:
+            s["line_name"] = line_name
+
+    return status, json.dumps(data)
 
 
 async def search_for(query: str) -> Tuple[int, str]:
