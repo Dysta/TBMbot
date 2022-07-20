@@ -1,3 +1,4 @@
+import asyncio
 from typing import Callable, List
 
 import disnake
@@ -96,25 +97,30 @@ class Schedule(commands.Cog):
         logger.debug(stop_line_ids)
 
         schedule_list: list = []
+        schedule_requests: list = []
 
         for s_id, l_ids in stop_line_ids:
             for l_name, l_id in l_ids:
-                status, content = await requester.get_stop_schedule(
-                    s_id, tram_converter.get_tram_schedule_id(l_id)
-                )
-                if status != 200 or content == "":
-                    continue
-                try:
-                    schedule_data: Schedule_m = Schedule_m.parse_raw(content)
-                    logger.debug(schedule_data)
-                    for s in schedule_data.__root__:
-                        s.line_name = l_name
-                    schedule_list.append(schedule_data)
-                except Exception as e:
-                    logger.error(f"Error during parsing of schedules: {e}")
-                    logger.error(
-                        f"Data used: stop_id {s_id}, line_id {l_id}, line_name {l_name}"
+                schedule_requests.append(
+                    requester.get_stop_schedule(
+                        l_name, s_id, tram_converter.get_tram_schedule_id(l_id)
                     )
+                )
+
+        responses = await asyncio.gather(*schedule_requests, return_exceptions=True)
+        for status, content in responses:
+            if status != 200 or content == requester.EMPTY_RESPONSE:
+                continue
+            logger.debug(content)
+            try:
+                schedule_data: Schedule_m = Schedule_m.parse_raw(content)
+                logger.debug(schedule_data)
+                schedule_list.append(schedule_data)
+            except Exception as e:
+                logger.error(f"Error during parsing of schedules: {e}")
+                logger.error(
+                    f"Data used: stop_id {s_id}, line_id {l_id}, line_name {l_name}"
+                )
 
         # ? we short by line_name
         # ? we just need to take the first bc all the others in the root have the same name
