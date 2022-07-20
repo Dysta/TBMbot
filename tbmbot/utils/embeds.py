@@ -59,14 +59,29 @@ def line_perturbation_embed(alerts_data: Alerts) -> Embed:
 
 
 def line_schedule_embed(title: str, schedules: List[Schedule]) -> Embed:
-    e: Embed = Embed(title=title, description="", colour=0xDB3C30)
-
-    for schedule in schedules:
+    e: Embed = Embed(title=title, description="", colour=0x039CD2)
+    # count how many field we put to see if we must put a reset field
+    placed_field: int = 0
+    for i, schedule in enumerate(schedules, start=1):
         v = "\n".join([f"`{e.waittime_text}`" for e in schedule.__root__])
         e.add_field(
-            name=f"{schedule.__root__[0].line_name} ➡️ {schedule.__root__[0].destination_name}",
+            name=f"__{schedule.__root__[0].line_name}__ ➡️ {schedule.__root__[0].destination_name}",
             value=v,
-            inline=False,
+            inline=True,
         )
+        placed_field += 1
+
+        zz = schedules[i].__root__[0].line_name if i < len(schedules) else ""
+        cc = schedule.__root__[0].line_name
+        # ? if the next line name is different than the actual
+        # ? and we don't placed 3 field in the row
+        # ? then we add a invisble field
+        if zz != cc and placed_field != 3:
+            e.add_field(name=VOID_TOKEN, value=VOID_TOKEN)
+            placed_field = 0
+
+        # ? we need to reset the counter if we placed 3 row without invisible field
+        if placed_field >= 3:
+            placed_field = 0
 
     return e
