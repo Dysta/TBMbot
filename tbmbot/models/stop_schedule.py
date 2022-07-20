@@ -14,7 +14,6 @@ class ScheduleItem(BaseModel):
     waittime: str
     updated_at: str
     line_name: Optional[str]
-    line_id: Optional[int]
 
 
 class Schedule(BaseModel):

@@ -5,7 +5,7 @@ from disnake.ext import commands
 from loguru import logger
 from tbmbot.models import Schedule as Schedule_m
 from tbmbot.models import Search, SearchItem, StopArea
-from tbmbot.utils import embeds, requester
+from tbmbot.utils import embeds, requester, tram_converter
 
 
 class Schedule(commands.Cog):
@@ -99,7 +99,9 @@ class Schedule(commands.Cog):
 
         for s_id, l_ids in stop_line_ids:
             for l_name, l_id in l_ids:
-                status, content = await requester.get_stop_schedule(s_id, l_id)
+                status, content = await requester.get_stop_schedule(
+                    s_id, tram_converter.get_tram_schedule_id(l_id)
+                )
                 if status != 200 or content == "":
                     continue
                 try:
@@ -107,7 +109,6 @@ class Schedule(commands.Cog):
                     logger.debug(schedule_data)
                     for s in schedule_data.__root__:
                         s.line_name = l_name
-                        s.line_id = int(l_id)
                     schedule_list.append(schedule_data)
                 except Exception as e:
                     logger.error(f"Error during parsing of schedules: {e}")
