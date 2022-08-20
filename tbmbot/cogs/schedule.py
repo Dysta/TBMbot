@@ -7,6 +7,7 @@ from loguru import logger
 from tbmbot.models import Schedule as Schedule_m
 from tbmbot.models import Search, SearchItem, StopArea
 from tbmbot.utils import embeds, requester, tram_converter
+from tbmbot.views import RefreshView
 
 
 class Schedule(commands.Cog):
@@ -129,7 +130,14 @@ class Schedule(commands.Cog):
         e: disnake.Embed = embeds.line_schedule_embed(
             f"⌚ {stop_name} — {stop_city}", schedule_list
         )
-        await inter.edit_original_message(embed=e)
+        await inter.edit_original_message(
+            embed=e,
+            view=RefreshView(
+                stop_line_ids=stop_line_ids,
+                stop_name=stop_name,
+                stop_city=stop_city,
+            ),
+        )
 
     @horaire.autocomplete("arret")
     async def arret_autocomplet(self, inter: disnake.CommandInteraction, string: str):
